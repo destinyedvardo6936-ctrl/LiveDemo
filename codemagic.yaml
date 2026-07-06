@@ -1,7 +1,7 @@
 definitions:
   environment:
     vars:
-      WORK_DIR: "LiveDemo"
+      WORK_DIR: "LiveDemo/LiveDemo"
       XCODE_WORKSPACE: "LiveDemo.xcworkspace"
       XCODE_SCHEME: "LiveDemo"
       BUNDLE_ID: "com.fd.kuailiao"
@@ -55,7 +55,7 @@ workflows:
             -exportPath build/
       - name: Rename IPA
         script: |
-          cd LiveDemo/build
+          cd $WORK_DIR/build
           mv *.ipa "LiveDemo-$(date +%Y%m%d-%H%M%S).ipa" || true
     artifacts:
       - LiveDemo/build/**/*.ipa
