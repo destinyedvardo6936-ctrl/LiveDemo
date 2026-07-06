@@ -1,7 +1,7 @@
 definitions:
   environment:
     vars:
-      WORK_DIR: "LiveDemo/LiveDemo"
+      WORK_DIR: "LiveDemo"
       XCODE_WORKSPACE: "LiveDemo.xcworkspace"
       XCODE_SCHEME: "LiveDemo"
       BUNDLE_ID: "com.fd.kuailiao"
@@ -28,17 +28,17 @@ workflows:
         script: |
           # 使用fastlane match获取证书
           gem install fastlane
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           
           # 获取Ad Hoc证书
           fastlane match adhoc --readonly --git_url=$MATCH_GIT_URL --git_basic_authorization=$(echo -n "$GIT_USER:$GIT_TOKEN" | base64) --git_branch=$MATCH_GIT_BRANCH || true
       - name: Install CocoaPods dependencies
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           pod install --repo-update
       - name: Build and Archive
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           xcodebuild archive \
             -workspace $XCODE_WORKSPACE \
             -scheme $XCODE_SCHEME \
@@ -48,14 +48,14 @@ workflows:
             CODE_SIGN_STYLE=Automatic
       - name: Export Ad Hoc IPA
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           xcodebuild -exportArchive \
             -archivePath build/LiveDemo.xcarchive \
             -exportOptionsPlist ExportOptions.plist \
             -exportPath build/
       - name: Rename IPA
         script: |
-          cd LiveDemo/LiveDemo/build
+          cd LiveDemo/build
           mv *.ipa "LiveDemo-$(date +%Y%m%d-%H%M%S).ipa" || true
     artifacts:
       - LiveDemo/build/**/*.ipa
@@ -73,15 +73,15 @@ workflows:
       - name: Setup signing
         script: |
           gem install fastlane
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           fastlane match appstore --readonly --git_url=$MATCH_GIT_URL --git_basic_authorization=$(echo -n "$GIT_USER:$GIT_TOKEN" | base64) --git_branch=$MATCH_GIT_BRANCH || true
       - name: Install CocoaPods dependencies
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           pod install --repo-update
       - name: Build and Archive
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           xcodebuild archive \
             -workspace $XCODE_WORKSPACE \
             -scheme $XCODE_SCHEME \
@@ -91,7 +91,7 @@ workflows:
             CODE_SIGN_STYLE=Automatic
       - name: Export App Store IPA
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           # 修改ExportOptions.plist中的method为app-store
           xcodebuild -exportArchive \
             -archivePath build/LiveDemo.xcarchive \
@@ -109,11 +109,11 @@ workflows:
     scripts:
       - name: Install CocoaPods dependencies
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           pod install --repo-update
       - name: Run unit tests
         script: |
-          cd LiveDemo/LiveDemo
+          cd LiveDemo
           xcodebuild test \
             -workspace $XCODE_WORKSPACE \
             -scheme $XCODE_SCHEME \
