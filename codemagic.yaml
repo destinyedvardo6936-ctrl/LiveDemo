@@ -23,6 +23,9 @@ workflows:
       cocoapods: default
       groups:
         - app_store_credentials
+      vars:
+        XCODE_WORKSPACE: "LiveDemo.xcworkspace"
+        XCODE_SCHEME: "LiveDemo"
     scripts:
       - name: Setup signing
         script: |
@@ -55,8 +58,16 @@ workflows:
             echo "Podfile not found, cannot build"
             exit 1
           fi
+          XCODE_WORKSPACE="${XCODE_WORKSPACE:-LiveDemo.xcworkspace}"
+          XCODE_SCHEME="${XCODE_SCHEME:-LiveDemo}"
           echo "Building from APP_DIR=$APP_DIR"
+          echo "XCODE_WORKSPACE=$XCODE_WORKSPACE XCODE_SCHEME=$XCODE_SCHEME"
           cd "$APP_DIR"
+          if [ ! -f "$XCODE_WORKSPACE" ]; then
+            echo "Workspace file not found: $XCODE_WORKSPACE"
+            ls -la
+            exit 1
+          fi
           xcodebuild archive \
             -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
@@ -106,6 +117,9 @@ workflows:
       cocoapods: default
       groups:
         - app_store_credentials
+      vars:
+        XCODE_WORKSPACE: "LiveDemo.xcworkspace"
+        XCODE_SCHEME: "LiveDemo"
     scripts:
       - name: Setup signing
         script: |
@@ -135,8 +149,16 @@ workflows:
             echo "Podfile not found, cannot build"
             exit 1
           fi
+          XCODE_WORKSPACE="${XCODE_WORKSPACE:-LiveDemo.xcworkspace}"
+          XCODE_SCHEME="${XCODE_SCHEME:-LiveDemo}"
           echo "Building from APP_DIR=$APP_DIR"
+          echo "XCODE_WORKSPACE=$XCODE_WORKSPACE XCODE_SCHEME=$XCODE_SCHEME"
           cd "$APP_DIR"
+          if [ ! -f "$XCODE_WORKSPACE" ]; then
+            echo "Workspace file not found: $XCODE_WORKSPACE"
+            ls -la
+            exit 1
+          fi
           xcodebuild archive \
             -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
@@ -197,8 +219,16 @@ workflows:
             echo "Podfile not found, cannot test"
             exit 1
           fi
+          XCODE_WORKSPACE="${XCODE_WORKSPACE:-LiveDemo.xcworkspace}"
+          XCODE_SCHEME="${XCODE_SCHEME:-LiveDemo}"
           echo "Testing from APP_DIR=$APP_DIR"
+          echo "XCODE_WORKSPACE=$XCODE_WORKSPACE XCODE_SCHEME=$XCODE_SCHEME"
           cd "$APP_DIR"
+          if [ ! -f "$XCODE_WORKSPACE" ]; then
+            echo "Workspace file not found: $XCODE_WORKSPACE"
+            ls -la
+            exit 1
+          fi
           xcodebuild test \
             -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
