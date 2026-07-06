@@ -1,0 +1,151 @@
+definitions:
+  environment:
+    vars:
+      XCODE_WORKSPACE: "LiveDemo/LiveDemo.xcworkspace"
+      XCODE_SCHEME: "LiveDemo"
+      BUNDLE_ID: "com.fd.kuailiao"
+      PROVISIONING_PROFILE: "com.fd.kuailiao.mobileprovision"
+      FASTLANE_USER: $APPLE_ID
+      FASTLANE_PASSWORD: $APPLE_PASSWORD
+      IPHONEOS_DEPLOYMENT_TARGET: "13.0"
+  caches:
+    cocoapods_cache:
+      - ~/.cocoapods
+
+workflows:
+  ios-build-ad-hoc:
+    name: iOS Build - Ad Hoc (测试/TestFlight)
+    instance_type: mac_mini
+    max_build_duration: 120
+    environment:
+      xcode: latest
+      cocoapods: default
+      groups:
+        - app_store_credentials
+    scripts:
+      - name: Setup signing
+        script: |
+          # 使用fastlane match获取证书
+          gem install fastlane
+          cd LiveDemo
+          
+          # 获取Ad Hoc证书
+          fastlane match adhoc --readonly --git_url=$MATCH_GIT_URL --git_basic_authorization=$(echo -n "$GIT_USER:$GIT_TOKEN" | base64) --git_branch=$MATCH_GIT_BRANCH || true
+      - name: Install CocoaPods dependencies
+        script: |
+          cd LiveDemo
+          pod install --repo-update
+      - name: Build and Archive
+        script: |
+          cd LiveDemo
+          xcodebuild archive \
+            -workspace $XCODE_WORKSPACE \
+            -scheme $XCODE_SCHEME \
+            -configuration Release \
+            -archivePath build/LiveDemo.xcarchive \
+            -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic
+      - name: Export Ad Hoc IPA
+        script: |
+          cd LiveDemo
+          xcodebuild -exportArchive \
+            -archivePath build/LiveDemo.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/
+      - name: Rename IPA
+        script: |
+          cd LiveDemo/build
+          mv *.ipa "LiveDemo-$(date +%Y%m%d-%H%M%S).ipa" || true
+    artifacts:
+      - LiveDemo/build/**/*.ipa
+    publishing:
+      email:
+        recipients:
+          - $TEAM_EMAIL
+        notify:
+          success: true
+          failure: true
+      slack:
+        channel: '#builds'
+        notify_on_build_start: true
+        notify:
+          success: true
+          failure: true
+
+  ios-build-appstore:
+    name: iOS Build - App Store
+    instance_type: mac_mini
+    max_build_duration: 120
+    environment:
+      xcode: latest
+      cocoapods: default
+      groups:
+        - app_store_credentials
+    scripts:
+      - name: Setup signing
+        script: |
+          gem install fastlane
+          cd LiveDemo
+          fastlane match appstore --readonly --git_url=$MATCH_GIT_URL --git_basic_authorization=$(echo -n "$GIT_USER:$GIT_TOKEN" | base64) --git_branch=$MATCH_GIT_BRANCH || true
+      - name: Install CocoaPods dependencies
+        script: |
+          cd LiveDemo
+          pod install --repo-update
+      - name: Build and Archive
+        script: |
+          cd LiveDemo
+          xcodebuild archive \
+            -workspace $XCODE_WORKSPACE \
+            -scheme $XCODE_SCHEME \
+            -configuration Release \
+            -archivePath build/LiveDemo.xcarchive \
+            -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic
+      - name: Export App Store IPA
+        script: |
+          cd LiveDemo
+          # 修改ExportOptions.plist中的method为app-store
+          xcodebuild -exportArchive \
+            -archivePath build/LiveDemo.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/
+    artifacts:
+      - LiveDemo/build/**/*.ipa
+    publishing:
+      email:
+        recipients:
+          - $TEAM_EMAIL
+        notify:
+          success: true
+          failure: true
+
+  ios-test:
+    name: iOS Unit Tests
+    instance_type: mac_mini
+    environment:
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install CocoaPods dependencies
+        script: |
+          cd LiveDemo
+          pod install --repo-update
+      - name: Run unit tests
+        script: |
+          cd LiveDemo
+          xcodebuild test \
+            -workspace $XCODE_WORKSPACE \
+            -scheme $XCODE_SCHEME \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/DerivedData
+    artifacts:
+      - LiveDemo/build/DerivedData/Logs/Test/*.xcresult/**
+    publishing:
+      email:
+        recipients:
+          - $TEAM_EMAIL
+        notify:
+          success: true
+          failure: true
