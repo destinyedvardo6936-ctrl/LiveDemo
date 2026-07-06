@@ -63,8 +63,8 @@ workflows:
           echo "Building from APP_DIR=$APP_DIR"
           echo "XCODE_WORKSPACE=$XCODE_WORKSPACE XCODE_SCHEME=$XCODE_SCHEME"
           cd "$APP_DIR"
-          if [ ! -f "$XCODE_WORKSPACE" ]; then
-            echo "Workspace file not found: $XCODE_WORKSPACE"
+          if [ ! -d "$XCODE_WORKSPACE" ]; then
+            echo "Workspace not found: $XCODE_WORKSPACE"
             ls -la
             exit 1
           fi
@@ -154,8 +154,8 @@ workflows:
           echo "Building from APP_DIR=$APP_DIR"
           echo "XCODE_WORKSPACE=$XCODE_WORKSPACE XCODE_SCHEME=$XCODE_SCHEME"
           cd "$APP_DIR"
-          if [ ! -f "$XCODE_WORKSPACE" ]; then
-            echo "Workspace file not found: $XCODE_WORKSPACE"
+          if [ ! -d "$XCODE_WORKSPACE" ]; then
+            echo "Workspace not found: $XCODE_WORKSPACE"
             ls -la
             exit 1
           fi
@@ -224,8 +224,8 @@ workflows:
           echo "Testing from APP_DIR=$APP_DIR"
           echo "XCODE_WORKSPACE=$XCODE_WORKSPACE XCODE_SCHEME=$XCODE_SCHEME"
           cd "$APP_DIR"
-          if [ ! -f "$XCODE_WORKSPACE" ]; then
-            echo "Workspace file not found: $XCODE_WORKSPACE"
+          if [ ! -d "$XCODE_WORKSPACE" ]; then
+            echo "Workspace not found: $XCODE_WORKSPACE"
             ls -la
             exit 1
           fi
