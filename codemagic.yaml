@@ -15,7 +15,7 @@ definitions:
 workflows:
   ios-build-ad-hoc:
     name: iOS Build - Ad Hoc (测试/TestFlight)
-    instance_type: mac_mini
+    instance_type: mac_mini_m1
     max_build_duration: 120
     environment:
       xcode: latest
@@ -61,7 +61,7 @@ workflows:
 
   ios-build-appstore:
     name: iOS Build - App Store
-    instance_type: mac_mini
+    instance_type: mac_mini_m1
     max_build_duration: 120
     environment:
       xcode: latest
@@ -101,7 +101,7 @@ workflows:
 
   ios-test:
     name: iOS Unit Tests
-    instance_type: mac_mini
+    instance_type: mac_mini_m1
     environment:
       xcode: latest
       cocoapods: default
