@@ -63,12 +63,12 @@ workflows:
           echo "Profile name: $PROFILE_NAME"
           echo "Team ID: $TEAM_ID"
           cat > /tmp/codemagic_signing_env.sh <<EOF
-export PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"
-export DEVELOPMENT_TEAM="$TEAM_ID"
-export CODE_SIGN_STYLE=Manual
-export CODE_SIGN_IDENTITY="Apple Distribution"
-export OTHER_CODE_SIGN_FLAGS="--keychain $PWD/build.keychain"
-EOF
+          export PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"
+          export DEVELOPMENT_TEAM="$TEAM_ID"
+          export CODE_SIGN_STYLE=Manual
+          export CODE_SIGN_IDENTITY="Apple Distribution"
+          export OTHER_CODE_SIGN_FLAGS="--keychain $PWD/build.keychain"
+          EOF
           chmod +x /tmp/codemagic_signing_env.sh
       - name: Install CocoaPods dependencies
         script: |
@@ -200,12 +200,12 @@ EOF
           echo "Profile name: $PROFILE_NAME"
           echo "Team ID: $TEAM_ID"
           cat > /tmp/codemagic_signing_env.sh <<EOF
-export PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"
-export DEVELOPMENT_TEAM="$TEAM_ID"
-export CODE_SIGN_STYLE=Manual
-export CODE_SIGN_IDENTITY="Apple Distribution"
-export OTHER_CODE_SIGN_FLAGS="--keychain $PWD/build.keychain"
-EOF
+          export PROVISIONING_PROFILE_SPECIFIER="$PROFILE_NAME"
+          export DEVELOPMENT_TEAM="$TEAM_ID"
+          export CODE_SIGN_STYLE=Manual
+          export CODE_SIGN_IDENTITY="Apple Distribution"
+          export OTHER_CODE_SIGN_FLAGS="--keychain $PWD/build.keychain"
+          EOF
           chmod +x /tmp/codemagic_signing_env.sh
       - name: Install CocoaPods dependencies
         script: |
