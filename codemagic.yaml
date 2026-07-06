@@ -58,19 +58,6 @@ workflows:
           mv *.ipa "LiveDemo-$(date +%Y%m%d-%H%M%S).ipa" || true
     artifacts:
       - LiveDemo/build/**/*.ipa
-    publishing:
-      email:
-        recipients:
-          - $TEAM_EMAIL
-        notify:
-          success: true
-          failure: true
-      slack:
-        channel: '#builds'
-        notify_on_build_start: true
-        notify:
-          success: true
-          failure: true
 
   ios-build-appstore:
     name: iOS Build - App Store
@@ -111,13 +98,6 @@ workflows:
             -exportPath build/
     artifacts:
       - LiveDemo/build/**/*.ipa
-    publishing:
-      email:
-        recipients:
-          - $TEAM_EMAIL
-        notify:
-          success: true
-          failure: true
 
   ios-test:
     name: iOS Unit Tests
@@ -142,10 +122,3 @@ workflows:
             -derivedDataPath build/DerivedData
     artifacts:
       - LiveDemo/build/DerivedData/Logs/Test/*.xcresult/**
-    publishing:
-      email:
-        recipients:
-          - $TEAM_EMAIL
-        notify:
-          success: true
-          failure: true
