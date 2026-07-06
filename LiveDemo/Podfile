@@ -1,0 +1,70 @@
+source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'
+
+platform :ios, '12.0'
+
+post_install do |installer|
+    installer.generated_projects.each do |project|
+          project.targets.each do |target|
+              target.build_configurations.each do |config|
+                  config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+               end
+          end
+   end
+end
+use_frameworks!
+
+
+
+
+target 'LiveDemo' do
+    pod 'AFNetworking'
+    pod 'Masonry'
+    pod 'SDCycleScrollView'
+    pod 'SDWebImage'
+    pod 'IQKeyboardManager'
+    pod 'MJExtension'
+    pod 'TZImagePickerController', '3.5.7'
+    pod 'MJRefresh'
+    pod 'SVProgressHUD'
+    pod 'JXPagingView/Pager'
+    pod 'JXCategoryView'
+    pod 'SVProgressHUD'
+    pod 'ReactiveObjC', '~> 3.1.1'
+    pod "UITableView+FDTemplateLayoutCell", '1.6'
+    pod 'Shimmer'
+#    pod 'WebViewJavascriptBridge'
+    pod 'AvoidCrash'
+    pod 'TXLiteAVSDK_Professional'
+#    pod 'VPSocketIO', '~> 1.0.5'
+    pod 'Socket.IO-Client-Swift', '~> 15.2.0'
+    pod 'Protobuf' ,'3.22.4'
+    pod 'SVGAPlayer'
+    pod 'YYText'
+    #YYImage用来加载gif
+    pod 'YYWebImage','1.0.5'
+    
+    pod 'mob_sharesdk'
+    pod 'mob_sharesdk/ShareSDKPlatforms/QQ'
+    pod 'mob_sharesdk/ShareSDKPlatforms/SinaWeibo'
+    #pod 'mob_sharesdk/ShareSDKPlatforms/WeChat'   #（微信sdk不带支付的命令）
+    pod 'mob_sharesdk/ShareSDKPlatforms/WeChatFull' #（微信sdk带支付的命令，和上面不带支付的不能共存，只能选择一个）
+    pod 'mob_sharesdk/ShareSDKPlatforms/Facebook'
+    pod 'mob_sharesdk/ShareSDKPlatforms/Twitter'
+    
+    
+    pod 'ZFPlayer', '~> 4.0'
+    pod 'ZFPlayer/ControlView', '~> 4.0'
+#    pod 'ZFPlayer/ijkplayer'
+  pod 'ZFPlayer/AVPlayer', '~> 4.0'
+    #AT 功能
+    pod 'HPGrowingTextView','1.1'
+    
+    #极光
+    pod 'JPush','3.3.4'
+#    pod 'JMessage','3.9.1'
+    #极光日志打印
+    pod 'CocoaLumberjack','3.4.2'
+    
+#    pod 'Reveal-SDK', '~> 24', :configurations => ['Debug']
+#    pod 'SocketRocket'
+end

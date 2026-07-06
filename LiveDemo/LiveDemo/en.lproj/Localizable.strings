@@ -1,0 +1,984 @@
+/* 
+  Localizable.strings
+  LiveDemo
+
+  Created by mrgao on 2022/11/20.
+  
+*/
+"一键归集"="One click aggregation";
+"当前游戏可用额度为"="The current available limit for the game is";
+"是否需要转入额度？"="Do you need to transfer the limit?";
+"当前可转入额度" = "Current transferable amount";
+"充值钻石"="Recharge diamonds";
+"充值成功"="Recharged successfully";
+"等待中"="Waiting";
+"订单号"="Order number";
+"充值渠道"="Recharge Channel";
+"支付宝"="Alipay";
+"微信支付"="WeChat Pay";
+"苹果支付"="Apple Pay";
+"微信小程序"="WeChat mini program";
+"paypal"="PayPal";
+"braintree_paypal"="Braintree_paypal";
+"丰汇支付"="Fenghui Payment";
+"银行卡"="Bank card";
+"虚拟币"="Virtual Currency";
+"已更新" = "Updated";
+/*
+LCGuideViewController.m
+*/
+"点击跳转第三方应用"="Click to jump to third-party applications";
+"跳过"="skip";
+
+/*
+LCHomeFollowListViewModel.m
+*/
+"数据加载失败，请稍后再试"="Data loading failed. Please try again later";
+
+/*
+LCHomeOtherLiveListViewModel.m
+*/
+"推荐"="recommend";
+"游戏"="game";
+
+/*
+LCHomeSegmentsViewModel.m
+*/
+"关注"="follow";
+"热门"="Popular";
+"短视频"="Short video";
+"视频"="video";
+
+/*
+LCHomeLiveListViewController.m
+*/
+"主播在赶来的路上~"="The anchor is on his way here~";
+
+/*
+LCHomeViewController.m
+*/
+"选择登录/注册方式"="Choose login/registration method";
+"手机登录/注册"="Mobile login/registration";
+"账户登录/注册"="Account login/registration";
+
+/*
+LCHomeFollowLiveListController.m
+*/
+"已关注主播"="Followed anchor";
+"为您推荐"="Recommended for you";
+
+/*
+LCRecommendLiveListViewController.m
+*/
+"光年推荐"="Light Year Recommendation";
+"游戏推荐"="Game recommendations";
+
+/*
+LCLiveListCollectionViewCell.m
+*/
+"按时收费"="Pay on time";
+"分钟"="minute";
+
+/*
+LCHomeFollowListHeaderView.m
+*/
+"换一批"="Change batch";
+
+/*
+LCMyBackpackViewController.m
+*/
+"我的背包"="my backpack ";
+"暂无礼物"="There are currently no gifts available";
+
+/*
+LCMybackpackTableViewCell.m
+*/
+"钻石"="Diamonds";
+"获取"="obtain";
+
+/*
+LCLoginByUserNameViewController.m
+*/
+"登录"="Sign in";
+"国家和地区"="countries and regions ";
+"中国"="China";
+"账户名称"="name of account";
+"请输入账户名称"="Please enter an account name";
+"请输入密码"="Please input a password";
+"注册"="register";
+
+/*
+LCLoginViewController.m
+*/
+"重新获取"="Retrieve";
+"后重新获取"="Reacquire after";
+"获取验证码"="Obtain verification code";
+"请输入手机号"="Please enter your phone number";
+"请输入验证码"="Please enter the verification code";
+
+/*
+LCRegisterByAccountViewController.m
+*/
+"请再次输入密码"="Please enter the password again";
+
+/*
+LCAreaNumberViewController.m
+*/
+"区号选择"="Area code selection";
+
+/*
+LCUpdatePersonalInfoViewController.m
+*/
+"个人资料"="personal data";
+"保存成功"="Successfully saved";
+"保存编辑"="Save Edit";
+"请填写昵称"="Please fill in the nickname";
+"请上传头像"="Please upload your avatar";
+"请选择性别"="Please select gender";
+"请填写个性签名"="Please fill in your personalized signature";
+"请填写生日"="Please fill in the birthday";
+"请填写城市"="Please fill in the city";
+"请填写省份"="Please fill in the province";
+"提示"="Tips";
+"没有权限访问您的照片，是否前往设置允许该应用使用照片？"="I don't have permission to access your photos. Do you want to go to the settings to allow this app to use photos?";
+"取消"="cancel";
+"确定"="determine";
+
+/*
+LCUpdatePersonalProfileCell.m
+*/
+"请输入个性签名"="Please enter a personalized signature";
+"头像："="head portrait:";
+
+/*
+LCUpdatePersonalBirthdayCell.m
+*/
+"生日："="birthday:";
+"请选择生日"="Please select a birthday";
+
+/*
+LCUpdatePersonalNicknameCell.m
+*/
+"请输入昵称"="Please enter a nickname";
+"昵称："="Nickname?";
+
+/*
+LCUpdatePersonalCityCell.m
+*/
+"请输入城市"="Please enter the city";
+"城市："="city:";
+
+/*
+LCUpdatePersonalProvinceCell.m
+*/
+"请输入省份"="Please enter the province";
+"省份："="province:";
+
+/*
+LCUpdatePersonalSexCell.m
+*/
+"性别："="Gender:";
+
+/*
+LCUserHomeViewController.m
+*/
+"取消关注"="Cancel Follow";
+
+/*
+LCUserHomeTableViewCell.m
+*/
+"会员ID ："="Member ID:";
+"家乡 ："="hometown:";
+"生日 ："="birthday:";
+"粉丝"="fans";
+"送出礼物："="Gifts:";
+"关于TA"="About TA";
+"个人介绍"="Personal Introduction";
+"个人礼物榜"="Personal Gift List";
+"个人信息"="personal information";
+"职业 ："="occupation:";
+
+/*
+LCVideoDetailViewController.m
+*/
+"温馨提示"="reminder";
+"试看结束，请开通会员后继续观看！"="The trial is over. Please activate your membership and continue watching!";
+"升级VIP"="Upgrade VIP";
+"试看结束"="Trial End";
+"秒后试看结束"="The trial ends in seconds";
+"确定升级VIP？"="Are you sure to upgrade your VIP?";
+"充值记录"="Recharge Record";
+"暂无相关视频"="There are currently no relevant videos available";
+"开通会员"="Activate membership";
+
+/*
+LCVideoListViewController.m
+*/
+"暂无推荐视频"="There are currently no recommended videos available";
+
+/*
+LCVideoDetailCollectionHeaderView.m
+*/
+"发布"="release";
+"播放"="play";
+"无限观影"="Infinite Viewing";
+"开通VIP"="Activate VIP";
+"非会员试看15秒"="Non member trial for 15 seconds";
+"开通VIP随心看"="Activate VIP and watch as you please";
+"游戏中心"="Game Center";
+"相关视频"="Related videos";
+
+/*
+BuyVip.m
+*/
+"非VIP会员不能观看，请升级VIP"="Non VIP members cannot watch, please upgrade to VIP";
+"取消观看"="Cancel Viewing";
+
+/*
+YBLookVideoVC.m
+*/
+"说点什么..."="Say something";
+"已经到顶了哦"="It's already reached the top";
+"没有更多视频"="No more videos";
+"暂无更多视频哦~"="No more videos available at the moment~";
+"请添加内容后再尝试"="Please add content before trying again";
+
+/*
+commCell.m
+*/
+"复制"="copy";
+"复制成功"="Successfully copied";
+"删除"="delete";
+"展开更多回复"="Expand more replies";
+"收起"="Pack up";
+"不能给自己的评论点赞"="Cannot like one's own comments";
+
+/*
+detailmodel.m
+*/
+"回复"="reply";
+
+/*
+commentview.m
+*/
+"评论"="comment";
+"暂无评论，快来抢沙发吧"="There are no comments at the moment. Come and grab the sofa";
+"没有更多了哦~"="There's no more~";
+"回复给"="Reply to";
+"评论成功"="Comment successful";
+
+/*
+YBLookVideoCell.m
+*/
+"查看同款商品"="View the same product";
+"查看商品详情"="View product details";
+"查看付费内容"="View paid content";
+
+/*
+NearbyVideoModel.m
+*/
+"好像在火星"="It seems to be on Mars";
+
+/*
+jubaoVC.m
+*/
+"举报"="report";
+"   选择举报的理由"="Reasons for choosing to report";
+"更多详细信息请在说明框中描述（选填）"="Please provide more detailed information in the description box (optional)";
+"提交"="Submit";
+"请选择举报理由"="Please select the reason for reporting";
+"举报成功"="Successfully reported";
+
+/*
+videoMoreView.m
+*/
+"分享至"="Share to";
+"拉黑"="block";
+"保存"="preservation";
+"复制链接"="Copy Link";
+"确认删除?"="Confirm deletion?";
+"取消删除"="Cancel deletion";
+"视频保存成功"="Video saved successfully";
+"视频保存失败"="Video save failed";
+"分享成功"="Successfully shared";
+"分享失败"="Sharing failed";
+"拉黑成功"="Pull black successfully";
+"删除成功"="Successfully deleted";
+
+/*
+LCMessageDetailViewController.m
+*/
+"消息详情"="Message Details";
+
+/*
+LCMessageListViewController.m
+*/
+"消息"="news";
+
+/*
+LCMessageListTableViewCell.m
+*/
+"系统消息"="System messages";
+
+/*
+LCMessageDetailTableViewCell.m
+*/
+"系统通知"="System notifications";
+
+/*
+LCLotteryTicketConfirmViewModel.m
+*/
+"1倍"="1x";
+"2倍"="2x";
+"5倍"="5x";
+"10倍"="10x";
+"20倍"="20x";
+
+/*
+LCGameTipViewController.m
+*/
+"玩法说明"="Gameplay instructions";
+
+/*
+LCBettingRecordViewController.m
+*/
+"投注记录"="Betting record";
+"全部"="whole";
+"未开奖"="Unlicensed";
+"中奖"="Winning the lottery";
+
+/*
+LCLotteryTicketPlayViewController.m
+*/
+"期"="stage";
+"请输入金额"="Please enter the amount";
+"封盘中"="In lockdown";
+"注"="notes";
+"已开奖"="Awarded";
+"封盘"="Sealing disk";
+"账户剩余："="Account Remaining:";
+"请填写单注金额"="Please fill in the amount of the note";
+"当前没有投注信息，请先下注"="There is currently no betting information available, please place your bet first";
+"请输入或选择金额"="Please enter or select an amount";
+
+/*
+LCBettingRecordListViewController.m
+*/
+"彩种"="Colorful Seed";
+"玩法"="playing method";
+"倍数"="multiple";
+"金额"="amount of money";
+"期号"="Issue number";
+"状态"="state";
+"暂无投注记录"="There is currently no record of betting";
+
+/*
+LCGameCenterViewController.m
+*/
+"客服"="customer service";
+"您目前处于游客浏览模式，请先绑定手机号"="You are currently in tourist browsing mode. Please bind your phone number first";
+"充提记录"="Recharge record";
+"存款"="deposit";
+"提现"="Withdrawal";
+"优惠"="Discount";
+"额度转换"="Limit conversion";
+
+/*
+LCGameWinningHistoryViewController.m
+*/
+"开奖历史"="Lottery history";
+"暂无开奖历史"="There is currently no lottery history";
+
+/*
+LCBettingRecordTableViewCell.m
+*/
+"未中奖"="Not winning the lottery";
+
+/*
+LCGameOptionView.m
+*/
+"开奖记录"="Lottery record ";
+"充值"="Recharge";
+
+/*
+LCLotteryTicketBeishuCell.m
+*/
+"倍"="times";
+
+/*
+LCLotteryTicketConfimView.m
+*/
+"下注成功"="Successfully wagered";
+"余额："="Balance:";
+"第"="Section";
+"本期截止："="As of this period:";
+"不能全部删除"="Cannot delete all";
+"确认投注"="Confirm betting";
+"赔率"="Odds ";
+"合计 "="total";
+"金额 "="amount of money";
+
+/*
+LCRevenueDetailSegmentViewModel.m
+*/
+"消费明细"="Consumption details";
+"收入明细"="Revenue Details";
+
+/*
+LCBettingRecordPageViewController.m
+*/
+"彩票"="lottery";
+"其它"="other";
+
+/*
+LCSearchResultViewController.m
+*/
+"搜索结果"="search result";
+
+/*
+LCSearchViewController.m
+*/
+"请输入搜索内容"="Please enter search content";
+
+/*
+LCMyWalletViewController.m
+*/
+"我的钱包"="My wallet";
+
+/*
+LCMySendZSTableViewCell.m
+*/
+"我送出的钻石"="The diamonds I sent out";
+
+/*
+LCMyLeftZSTableViewCell.m
+*/
+"我的钻石"="My Diamond";
+"兑换钻石"="Redeem diamonds";
+
+/*
+LCMyWalletBalanceTableViewCell.m
+*/
+"余额(钻石)"="Balance (Diamond)";
+
+/*
+LCRechargeAgentViewController.m
+*/
+"选择充值金额"="Select recharge amount";
+"客服列表"="Customer Service List";
+
+/*
+LCRechargeBankViewController.m
+*/
+"提交成功"="Successfully submitted";
+"请转账到以下帐号：转账后请提交信息"="Please transfer to the following account: After the transfer, please submit the information";
+"请选择金额"="Please select an amount";
+
+/*
+LCRechageViewController.m
+*/
+"充值中心"="Voucher Center ";
+"选择支付方式"="Choose payment method";
+
+/*
+LCRechargeSubViewController.m
+*/
+"请选择充值方式"="Please select a recharge method";
+
+/*
+LCRechargePersonalTableViewCell.m
+*/
+"微信"="WeChat";
+
+/*
+LCVirtualCurrencyTableViewCell.m
+*/
+"TEC20地址"="TEC20 address";
+"转账数量"="Transfer quantity";
+"请输入转账数量"="Please enter the transfer quantity";
+"我已转账"="I have transferred the money";
+"已复制成功"="Successfully copied";
+
+/*
+LCRechargeBankTableViewCell.m
+*/
+"帐号"="accounts";
+"姓名"="full name";
+"帐号类型"="Account Type ";
+
+/*
+LCRechargeMoneyCollectionViewCell.m
+*/
+"赠送"="give";
+
+/*
+LCLiveDetailViewModel+LCSocketViewModel.m
+*/
+"你已被禁言"="You have been banned from speaking";
+"直播间消息"="Live room messages";
+"送出了"="Sent out";
+"在"="stay";
+"中下注了"="Bet made";
+"元"="element";
+"守护了主播"="Guarded the anchor";
+
+/*
+LCLiveViewController.m
+*/
+"没有更多直播间了"="There are no more live rooms left";
+
+/*
+LCLiveDetailViewController.m
+*/
+"已开启弹幕评论，10钻石/条"="Started barrage review, 10 diamonds per piece";
+"输入想跟主播说的话"="Enter what you want to say to the anchor";
+"预览倒计时"="Preview countdown";
+"秒"="second";
+"下一个"="next";
+"您当前余额不足无法观看"="Your current balance is insufficient to view";
+"播放失败"="Playback failed";
+"贡献榜"="Contribution List";
+"守护"="guard";
+"发送"="send out";
+"请输入弹幕"="Please input the barrage";
+"请输入消息"="Please enter a message";
+
+/*
+LCLiveActivitysView.m
+*/
+"正在加载"="Loading";
+"暂无数据"="There is currently no data available";
+"活动中心"="Activity Center";
+
+/*
+LCLiveActivityTableViewCell.m
+*/
+"活动时间："="Activity time:";
+
+/*
+LCLiveToolView.m
+*/
+"说点什么…"="Say something";
+
+/*
+LCLiveStopInfoView.m
+*/
+"直播已结束"="Live broadcast has ended";
+"直播时长"="Live duration";
+"收获"="harvest";
+"返回"="return";
+
+/*
+LCLiveHighUserLevelAnimationView.m
+*/
+"   进入直播间"="Enter the live broadcast room";
+
+/*
+LCLiveUserEnterCollectionCell.m
+*/
+"   来了"="coming";
+
+/*
+LCLiveLotteryTicketDetailView.m
+*/
+"期号："="Issue:";
+"开奖结果"="Lottery results";
+"投注"="Betting";
+
+/*
+LCLiveGiftListView.m
+*/
+"钻石："="Diamonds:";
+"礼物"="gift";
+"背包"="knapsack";
+"请选择礼物"="Please select a gift";
+"请选择数量"="Please select quantity";
+
+/*
+LCMineViewModel.m
+*/
+"游戏记录"="Game Record";
+"账目明细"="Account Details";
+"代理申请"="Proxy application";
+"代理"="agent";
+"手机认证"="Mobile authentication";
+"等级"="Grade";
+"专属客服"="Exclusive customer service";
+"家族中心"="Family Center";
+"设置"="set up";
+
+/*
+LCMineViewController.m
+*/
+"申请成为代理？"="Apply to become an agent?";
+"申请在审核中"="Application under review";
+
+/*
+LCMineUserInfoCell.m
+*/
+"编辑资料"="Editing Information";
+
+/*
+LCMineWalletAndMeaageCell.m
+*/
+"波币钱包"="Bo coin wallet";
+
+/*
+LCMineFunTableViewCell.m
+*/
+"钱包"="wallet";
+"贵族"="noble";
+"活动"="activity";
+"推广"="extension";
+
+/*
+LCFansListViewController.m
+*/
+"暂无粉丝"="No fans at the moment";
+
+/*
+LCFansListTableViewCell.m
+*/
+"查看主页"="View Home Page";
+
+/*
+LCActivitySegmentViewModel.m
+*/
+"游戏活动"="Game activities";
+"直播活动"="Live streaming activities";
+
+/*
+LCFollowListViewController.m
+*/
+"暂无关注"="No followers at the moment";
+
+/*
+LCFollowListTableViewCell.m
+*/
+"已关注"="Followed";
+
+/*
+LCAccountSecurityViewController.m
+*/
+"账号与安全"="Account and Security";
+"安全等级：高"="Security level: High";
+"已绑定"="Bound";
+"安全等级：低"="Safety level: low";
+"去绑定手机号"="To bind a phone number";
+"提示：通过以下设置提高安全等级"="Tip: Increase security level through the following settings";
+"手机绑定"="Phone binding";
+
+/*
+LCBindPhoneViewController.m
+*/
+"验证码"="Verification Code";
+"验证"="verification";
+
+/*
+guardShowView.m
+*/
+"您是当前主播的月守护\n守护日期截止到"="You are the current anchor's monthly guardian  nGuardian date expires";
+"续费守护"="Renewal Protection";
+"您是当前主播的年守护\n守护日期截止到"="You are the current anchor's annual guardian  nGuardian date expires";
+"快去为喜欢的主播开通守护吧"="Hurry up and activate guardianship for your favorite anchors";
+"开通守护"="Enable Guardian";
+"你还没有守护哦"="You haven't guarded yet";
+"成为TA的第一个守护"="Becoming the first guardian of TA";
+"本周贡献"="Contribution this week";
+
+/*
+guardAlertView.m
+*/
+"您当前为主播的月守护，开通年守护将覆盖您的月守护剩余时长，是否开通？"="You are currently the monthly guardian of the anchor. Opening the annual guardian will cover the remaining duration of your monthly guardian. Do you want to activate it?";
+"您当前为主播的年守护\n无法开通7天/月守护"="Your current annual guardian as the anchor cannot be activated for a 7-day/month guardian";
+
+/*
+shouhuView.m
+*/
+"选择守护时长"="Select Guarding Duration";
+"守护特权"="Guardian privileges";
+"立即开通"="activate now";
+"我的"="my";
+"您将花费"="You will spend";
+"为主播开通7天守护"="Enable 7-day protection for the anchor";
+"为主播开通月守护"="Enable monthly guardianship for anchors";
+"为主播开通年守护"="Enable annual guardianship for anchors";
+"网络错误"="network error";
+
+/*
+LCSettingViewModel.m
+*/
+"账号安全中心"="Account Security Center";
+"语言"="language";
+"隐私政策"="Privacy Policy";
+"支付密码"="Payment password";
+"检查更新"="Check for updates";
+"最新"="newest";
+"更新"="to update";
+
+/*
+LCSettingViewController.m
+*/
+"确定退出登录？"="Are you sure to log out?";
+"已是最新版本"="It is already the latest version";
+"选择语言"="Select Language";
+
+/*
+LCSettingLogoutBtnCell.m
+*/
+"退出登录"="Log out of login";
+
+/*
+LCWithDrawBindAccountViewController.m
+*/
+"账户绑定"="Account binding";
+"添加成功"="Successfully added";
+"修改成功"="Successfully modified";
+"点击修改"="Click to modify";
+"点击绑定"="Click to bind";
+"请填写银行卡号"="Please fill in the bank card number";
+"请填写账户"="Please fill in the account";
+"请填写持卡人"="Please fill in the cardholder";
+"请填写姓名"="Please fill in your name";
+"请填写银行名称"="Please fill in the bank name";
+"支付宝账户"="Alipay account";
+"请输入支付宝账户"="Please enter Alipay account";
+"请输入姓名"="Please enter your name";
+"微信账户"="WeChat account";
+"请输入微信账户"="Please enter your WeChat account";
+"持卡人"="Cardholder";
+"请输入持卡人"="Please enter the cardholder";
+"银行卡号"="Bank card number";
+"请输入银行卡号"="Please enter your bank card number";
+"银行名称"="Bank Name";
+"请输入充值金额"="Please enter the recharge amount";
+"请输入充值数量"="Please enter the recharge quantity";
+
+/*
+LCWithDrawViewController.m
+*/
+"现金提现"="Cash withdrawal";
+"提现申请已提交"="The withdrawal application has been submitted";
+"提现数量"="Withdrawal quantity";
+"点击提现"="Click to withdraw";
+"请填写提现金额"="Please fill in the withdrawal amount";
+"请添加提现账户"="Please add a withdrawal account";
+
+/*
+LCWithDrawPaymentViewController.m
+*/
+"提现记录"="Withdrawal records";
+
+/*
+LCWithDrawAccountTableViewCell.m
+*/
+"支付宝"="Alipay";
+"银行卡"="bank card";
+"修改"="modify";
+"添加"="add to";
+"账号"="account number";
+"暂无"="Currently unavailable";
+
+/*
+LCWithDrawPaymentCell.m
+*/
+"手续费"="Service Charge";
+
+/*
+LCWithDrawHeaderTableViewCell.m
+*/
+"数量"="quantity";
+"累计提现"="Accumulated withdrawal";
+"可提现数量（个）"="Withdrawable quantity (piece)";
+
+/*
+LCWithDrawTextFieldTableViewCell.m
+*/
+"数量不足"="Insufficient quantity";
+"最低提现数量1个"="Minimum withdrawal quantity: 1";
+"全部提现"="Full withdrawal";
+
+/*
+LCRankArchorViewController.m
+*/
+"昨日榜单"="Yesterday's list";
+"日榜"="Daily list";
+"周榜"="Weekly list";
+"月榜"="Monthly List";
+
+/*
+LCRankViewController.m
+*/
+"主播榜"="Anchor Chart";
+"土豪榜"="List of local tycoons";
+
+/*
+LCRankListViewController.m
+*/
+"虚位以待"="leave a seat vacant for sb.";
+
+/*
+LCRankTopThreeCell.m
+*/
+"落后"="backward";
+"火力"="fire";
+
+/*
+JCHATConversationViewController.m
+*/
+"点击关注，可及时看到对方动态"="Click on follow to see the other party's updates in a timely manner";
+"关注对方成功"="Follow the other party successfully";
+"该消息发送时间已超过两分钟,无法撤回"="The message has been sent for more than two minutes and cannot be recalled";
+"没有相册权限"="No album permissions";
+"请到设置页面获取相册权限"="Please go to the settings page to obtain album permissions";
+"不支持视频发送"="Video sending not supported";
+"你撤回了一条消息"="You withdrew a message";
+"对方撤回了一条消息"="The other party withdrew a message";
+"保存到本地相册"="Save to local album";
+"对方未关注你,最多只能发送"="The other party is not following you, and can only send at most";
+"条信息"="Messages";
+"对方暂时拒绝接收您的消息"="The other party has temporarily refused to receive your message";
+"取消拉黑成功"="Cancel blackout successfully";
+
+/*
+JCHATToolBar.m
+*/
+"直播间开启期间不可使用该操作"="This operation cannot be used during the opening period of the live broadcast room";
+"按住 说话"="Hold to talk";
+"松开 结束"="Release End";
+"无法录音"="Unable to record";
+"请在“设置-隐私-麦克风”选项中，允许jpushIM访问你的手机麦克风。"="Please allow jpushIM to access your phone's microphone in the 'Settings Privacy Microphone' option.";
+"关闭"="close";
+"发送消息..."="Send Message";
+
+/*
+JCHATMoreView.m
+*/
+"相册"="album";
+"位置"="position";
+"拍摄"="shot";
+"语音输入"="Voice input";
+
+/*
+XHVoiceRecordHelper.m
+*/
+"录音时间太短"="The recording time is too short";
+
+/*
+XHVoiceRecordHUD.m
+*/
+"手指上滑，取消发送"="Finger slide up to cancel sending";
+"松开手指，取消发送"="Release your finger and cancel sending";
+
+/*
+JCHATMessageContentView.m
+*/
+"撤回"="withdraw";
+
+/*
+TencentLocationVC.m
+*/
+"搜索地点"="Search location";
+
+/*
+JCHATStringUtils.m
+*/
+"密码错误"="Password error";
+"刚刚"="just";
+"分钟前"="Minutes ago";
+
+/*
+LCNoticeView.m
+*/
+"公告"="Notice";
+"男"="male";
+
+/*
+exoensiveGifGiftV.m
+*/
+"的直播间送出"="Delivered from the live broadcast room";
+"送了一个"="Sent one";
+
+/*
+shipAction.m
+*/
+"赠送了豪华游轮"="Presented a luxury cruise ship as a gift";
+
+/*
+continueGift.m
+*/
+"送"="give";
+"喜中"="Xizhong";
+
+/*
+LCTabBarViewController.m
+*/
+"首页"="home page";
+"活动大厅"="Event Hall";
+"储值"="Stored value";
+
+/*
+LCLanguageManager.m
+*/
+"英语"="English";
+"繁体中文"="Traditional Chinese";
+"马来语"="Malay";
+"简体中文"="Simplified Chinese";
+
+/*
+LCVersionView.m
+*/
+"版本更新"="Version update";
+"立即更新"="Update Now";
+
+/*
+LCSexSelectView.m
+*/
+"性别"="Gender";
+
+/*
+LCLocationSelectView.m
+*/
+"我的地区"="My Region";
+"所有地区"="All regions";
+
+/*
+LCQuatoBalanceTableViewCell.m
+*/
+"账户余额"="Account balance";
+"刷新数据"="refresh data";
+
+/*
+QuotaConversionVC.m
+*/
+"请输入转入金额"="Please enter the transfer amount";
+"请输入转入额度"="Please enter the transfer amount";
+"请输入转出金额"="Please enter the transfer out amount";
+"请输入转出额度"="Please enter the transfer out limit";
+
+/*
+LCQuotaTableViewCell.m
+*/
+"****点击查询"="****Click to query";
+"转入"="to change into";
+"转出"="Transfer out";
+
+/*
+LCNewInputView.m
+*/
+"说点什么吧"="Say something";
+
+/*
+LCLoginView.m
+*/
+"请选择登陆方式"="Please select the login method";
+"游客登陆"="Visitor login";
+"登录/注册"="Login/Registration";
+
+/*
+AppDelegate.m
+*/
+"您未授权连接网络，可以在“设置->App->无线数据”中开启“无线数据”，连接网络后才能流畅使用。"="You are not authorized to connect to the network. You can turn on \"Wireless Data\" in \"Settings>App>Wireless Data\" to connect to the network and use it smoothly.";
+
+
+

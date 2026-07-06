@@ -1,0 +1,16 @@
+//
+//  LCLiveGiftListApi.h
+//  LiveDemo
+//
+//  Created by mrgao on 2023/3/13.
+//
+
+#import "LCBaseApi.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface LCLiveGiftListApi : LCBaseApi
+
+@end
+
+NS_ASSUME_NONNULL_END

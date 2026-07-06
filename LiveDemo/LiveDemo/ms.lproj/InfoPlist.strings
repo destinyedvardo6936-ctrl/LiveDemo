@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  LiveDemo
+
+  Created by mrgao on 2022/11/20.
+  
+*/
+// Localizable App Name是App在英语环境环境下显示的名称
+CFBundleDisplayName = "遇见直播";
