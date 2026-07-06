@@ -33,25 +33,82 @@ workflows:
           fastlane match adhoc --readonly --git_url=$MATCH_GIT_URL --git_basic_authorization=$(echo -n "$GIT_USER:$GIT_TOKEN" | base64) --git_branch=$MATCH_GIT_BRANCH || true
       - name: Install CocoaPods dependencies
         script: |
-          pod install --repo-update --project-directory=LiveDemo
+          set -e
+          echo "PWD=$(pwd)"
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found in current or sibling paths"
+            echo "pwd: $(pwd)"
+            ls -la
+            ls -la LiveDemo || true
+            ls -la ../LiveDemo || true
+            exit 1
+          fi
+          echo "Using APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
+          pod install --repo-update
       - name: Build and Archive
         script: |
+          set -e
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found, cannot build"
+            exit 1
+          fi
+          echo "Building from APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
           xcodebuild archive \
-            -workspace LiveDemo/$XCODE_WORKSPACE \
-            -scheme $XCODE_SCHEME \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
             -configuration Release \
-            -archivePath LiveDemo/build/LiveDemo.xcarchive \
+            -archivePath build/LiveDemo.xcarchive \
             -allowProvisioningUpdates \
             CODE_SIGN_STYLE=Automatic
       - name: Export Ad Hoc IPA
         script: |
+          set -e
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found, cannot export"
+            exit 1
+          fi
+          echo "Exporting from APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
           xcodebuild -exportArchive \
-            -archivePath LiveDemo/build/LiveDemo.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath LiveDemo/build/
+            -archivePath build/LiveDemo.xcarchive \
+            -exportOptionsPlist "$APP_DIR/../ExportOptions.plist" \
+            -exportPath build/
       - name: Rename IPA
         script: |
-          mv LiveDemo/build/*.ipa "LiveDemo-$(date +%Y%m%d-%H%M%S).ipa" || true
+          set -e
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found, cannot rename IPA"
+            exit 1
+          fi
+          echo "Renaming IPA from APP_DIR=$APP_DIR/build"
+          cd "$APP_DIR/build"
+          mv *.ipa "LiveDemo-$(date +%Y%m%d-%H%M%S).ipa" || true
     artifacts:
       - LiveDemo/build/**/*.ipa
 
@@ -71,23 +128,66 @@ workflows:
           fastlane match appstore --readonly --git_url=$MATCH_GIT_URL --git_basic_authorization=$(echo -n "$GIT_USER:$GIT_TOKEN" | base64) --git_branch=$MATCH_GIT_BRANCH || true
       - name: Install CocoaPods dependencies
         script: |
-          pod install --repo-update --project-directory=LiveDemo
+          set -e
+          echo "PWD=$(pwd)"
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found in current or sibling paths"
+            echo "pwd: $(pwd)"
+            ls -la
+            ls -la LiveDemo || true
+            ls -la ../LiveDemo || true
+            exit 1
+          fi
+          echo "Using APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
+          pod install --repo-update
       - name: Build and Archive
         script: |
+          set -e
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found, cannot build"
+            exit 1
+          fi
+          echo "Building from APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
           xcodebuild archive \
-            -workspace LiveDemo/$XCODE_WORKSPACE \
-            -scheme $XCODE_SCHEME \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
             -configuration Release \
-            -archivePath LiveDemo/build/LiveDemo.xcarchive \
+            -archivePath build/LiveDemo.xcarchive \
             -allowProvisioningUpdates \
             CODE_SIGN_STYLE=Automatic
       - name: Export App Store IPA
         script: |
-          # 修改ExportOptions.plist中的method为app-store
+          set -e
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found, cannot export"
+            exit 1
+          fi
+          echo "Exporting from APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
           xcodebuild -exportArchive \
-            -archivePath LiveDemo/build/LiveDemo.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath LiveDemo/build/
+            -archivePath build/LiveDemo.xcarchive \
+            -exportOptionsPlist "$APP_DIR/../ExportOptions.plist" \
+            -exportPath build/
     artifacts:
       - LiveDemo/build/**/*.ipa
 
@@ -100,15 +200,46 @@ workflows:
     scripts:
       - name: Install CocoaPods dependencies
         script: |
-          pod install --repo-update --project-directory=LiveDemo
+          set -e
+          echo "PWD=$(pwd)"
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found in current or sibling paths"
+            echo "pwd: $(pwd)"
+            ls -la
+            ls -la LiveDemo || true
+            ls -la ../LiveDemo || true
+            exit 1
+          fi
+          echo "Using APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
+          pod install --repo-update
       - name: Run unit tests
         script: |
+          set -e
+          if [ -f "Podfile" ]; then
+            APP_DIR="$(pwd)"
+          elif [ -f "LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/LiveDemo"
+          elif [ -f "../LiveDemo/Podfile" ]; then
+            APP_DIR="$(pwd)/../LiveDemo"
+          else
+            echo "Podfile not found, cannot test"
+            exit 1
+          fi
+          echo "Testing from APP_DIR=$APP_DIR"
+          cd "$APP_DIR"
           xcodebuild test \
-            -workspace LiveDemo/$XCODE_WORKSPACE \
-            -scheme $XCODE_SCHEME \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath LiveDemo/build/DerivedData
+            -derivedDataPath build/DerivedData
     artifacts:
       - LiveDemo/build/DerivedData/Logs/Test/*.xcresult/**
