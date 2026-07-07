@@ -72,6 +72,7 @@ definitions:
           --archive-method="$XCODE_ARCHIVE_METHOD" \
           --custom-export-options="$XCODE_CUSTOM_EXPORT_OPTIONS" \
           --export-options-plist "$EXPORT_OPTIONS_PATH" \
+          --warn-only \
           --code-signing-setup-verbose-logging
         if [ ! -f "$EXPORT_OPTIONS_PATH" ]; then
           echo "Generated export options plist not found: $EXPORT_OPTIONS_PATH"
