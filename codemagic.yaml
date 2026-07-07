@@ -58,19 +58,79 @@ definitions:
           echo "Podfile not found, cannot configure signing"
           exit 1
         fi
-        LOCAL_PROFILE=$(find "$REPO_ROOT" -maxdepth 2 -type f -name '*.mobileprovision' | head -n1)
-        if [ -z "$LOCAL_PROFILE" ]; then
-          echo "No local provisioning profile found in repository root"
+        mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+        PROFILE_SCAN_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+        LOCAL_PROFILE=$(find "$REPO_ROOT" -maxdepth 2 -type f -name '*.mobileprovision' | head -n1 || true)
+        if [ -n "$LOCAL_PROFILE" ]; then
+          echo "Found repository provisioning profile fallback: $LOCAL_PROFILE"
+        fi
+        CANDIDATE_LIST=$(mktemp)
+        find "$PROFILE_SCAN_DIR" -maxdepth 1 -type f -name '*.mobileprovision' | sort > "$CANDIDATE_LIST" || true
+        if [ -n "$LOCAL_PROFILE" ]; then
+          printf '%s\n' "$LOCAL_PROFILE" >> "$CANDIDATE_LIST"
+        fi
+        if [ ! -s "$CANDIDATE_LIST" ]; then
+          echo "No provisioning profiles available after ios_signing setup"
           exit 1
         fi
-        mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-        PROFILE_PLIST="$HOME/profile.plist"
-        security cms -D -i "$LOCAL_PROFILE" > "$PROFILE_PLIST"
+        EXPECT_DISTRIBUTION_PROFILE=true
+        if [ "${XCODE_EXPORT_METHOD}" = "development" ]; then
+          EXPECT_DISTRIBUTION_PROFILE=false
+        fi
+        SELECTED_PROFILE=
+        while IFS= read -r CANDIDATE_PROFILE; do
+          [ -n "$CANDIDATE_PROFILE" ] || continue
+          CANDIDATE_PLIST=$(mktemp)
+          if ! security cms -D -i "$CANDIDATE_PROFILE" > "$CANDIDATE_PLIST" 2>/dev/null; then
+            rm -f "$CANDIDATE_PLIST"
+            continue
+          fi
+          CANDIDATE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" "$CANDIDATE_PLIST" 2>/dev/null || true)
+          CANDIDATE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$CANDIDATE_PLIST" 2>/dev/null || true)
+          CANDIDATE_TEAM=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$CANDIDATE_PLIST" 2>/dev/null || true)
+          APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" "$CANDIDATE_PLIST" 2>/dev/null || true)
+          GET_TASK_ALLOW=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:get-task-allow" "$CANDIDATE_PLIST" 2>/dev/null || echo false)
+          HAS_PROVISIONED_DEVICES=$(/usr/libexec/PlistBuddy -c "Print :ProvisionedDevices:0" "$CANDIDATE_PLIST" >/dev/null 2>&1 && echo true || echo false)
+          HAS_ALL_DEVICES=$(/usr/libexec/PlistBuddy -c "Print :ProvisionsAllDevices" "$CANDIDATE_PLIST" 2>/dev/null || echo false)
+          echo "Evaluating profile: ${CANDIDATE_NAME:-unknown} (${CANDIDATE_UUID:-no-uuid}) team=${CANDIDATE_TEAM:-unknown} appId=${APP_IDENTIFIER:-unknown} get-task-allow=${GET_TASK_ALLOW} devices=${HAS_PROVISIONED_DEVICES} all-devices=${HAS_ALL_DEVICES}"
+          if [ -z "$APP_IDENTIFIER" ]; then
+            rm -f "$CANDIDATE_PLIST"
+            continue
+          fi
+          case "$APP_IDENTIFIER" in
+            *.$BUNDLE_ID|$BUNDLE_ID)
+              ;;
+            *)
+              rm -f "$CANDIDATE_PLIST"
+              continue
+              ;;
+          esac
+          if [ "$EXPECT_DISTRIBUTION_PROFILE" = true ] && [ "$GET_TASK_ALLOW" = true ]; then
+            rm -f "$CANDIDATE_PLIST"
+            continue
+          fi
+          if [ "$EXPECT_DISTRIBUTION_PROFILE" = true ] && [ "$XCODE_EXPORT_METHOD" = "release-testing" ] && [ "$HAS_PROVISIONED_DEVICES" != true ]; then
+            rm -f "$CANDIDATE_PLIST"
+            continue
+          fi
+          if [ "$EXPECT_DISTRIBUTION_PROFILE" = true ] && [ "$XCODE_EXPORT_METHOD" = "app-store" ] && [ "$HAS_PROVISIONED_DEVICES" = true ]; then
+            rm -f "$CANDIDATE_PLIST"
+            continue
+          fi
+          SELECTED_PROFILE="$CANDIDATE_PROFILE"
+          PROFILE_PLIST="$CANDIDATE_PLIST"
+          break
+        done < "$CANDIDATE_LIST"
+        rm -f "$CANDIDATE_LIST"
+        if [ -z "$SELECTED_PROFILE" ]; then
+          echo "No provisioning profile matched bundle id $BUNDLE_ID for export method $XCODE_EXPORT_METHOD"
+          exit 1
+        fi
         PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" "$PROFILE_PLIST")
         PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$PROFILE_PLIST")
         TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$PROFILE_PLIST")
-        cp "$LOCAL_PROFILE" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
-        echo "Using local provisioning profile: $LOCAL_PROFILE"
+        cp "$SELECTED_PROFILE" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+        echo "Using selected provisioning profile: $SELECTED_PROFILE"
         echo "Resolved profile name: $PROFILE_NAME"
         echo "Resolved profile UUID: $PROFILE_UUID"
         echo "Resolved team id: $TEAM_ID"
@@ -109,6 +169,7 @@ definitions:
         export CM_TEAM_ID="$TEAM_ID"
         export CM_EXPORT_OPTIONS_PATH="$EXPORT_OPTIONS_PATH"
         EOF
+        rm -f "$PROFILE_PLIST"
     build_archive: &build_archive
       name: Build and Archive
       script: |
