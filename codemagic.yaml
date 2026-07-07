@@ -26,6 +26,8 @@ definitions:
         fi
         echo "Using APP_DIR=$APP_DIR"
         cd "$APP_DIR"
+        # Force regenerate Pods project to apply Podfile post_install changes
+        pod deintegrate || true
         pod install
     setup_signing: &setup_signing
       name: Set up code signing settings on Xcode project
