@@ -26,9 +26,24 @@ definitions:
         fi
         echo "Using APP_DIR=$APP_DIR"
         cd "$APP_DIR"
-        # Force regenerate Pods project to apply Podfile post_install changes
-        pod deintegrate || true
-        pod install
+        if [ -f "Pods/Manifest.lock" ] && cmp -s "Podfile.lock" "Pods/Manifest.lock"; then
+          echo "Pods are already in sync, skipping pod install"
+        else
+          pod install --deployment
+        fi
+
+        WECHAT_LIB="Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/WeChatSDKFull/libWeChatSDK.a"
+        WEIBO_LIB="Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/SinaWeiboSDK/libWeiboSDK.a"
+        if [ ! -f "$WECHAT_LIB" ]; then
+          echo "Missing required library: $WECHAT_LIB"
+          find Pods/mob_sharesdk -maxdepth 6 -iname '*wechat*' -o -iname 'libWeChatSDK.a' || true
+          exit 1
+        fi
+        if [ ! -f "$WEIBO_LIB" ]; then
+          echo "Missing required library: $WEIBO_LIB"
+          find Pods/mob_sharesdk -maxdepth 6 -iname '*weibo*' -o -iname 'libWeiboSDK.a' || true
+          exit 1
+        fi
     setup_signing: &setup_signing
       name: Set up code signing settings on Xcode project
       script: |
@@ -59,13 +74,16 @@ definitions:
           ls -la
           exit 1
         fi
+        WECHAT_LIB_DIR="$PWD/Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/WeChatSDKFull"
+        WEIBO_LIB_DIR="$PWD/Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/SinaWeiboSDK"
         xcodebuild archive \
           -workspace "$XCODE_WORKSPACE" \
           -scheme "$XCODE_SCHEME" \
           -configuration Release \
           -archivePath build/LiveDemo.xcarchive \
           -destination 'generic/platform=iOS' \
-          -allowProvisioningUpdates
+          -allowProvisioningUpdates \
+          LIBRARY_SEARCH_PATHS="$(inherited) $WEIBO_LIB_DIR $WECHAT_LIB_DIR"
 
 workflows:
   ios-build-ad-hoc:
@@ -185,12 +203,15 @@ workflows:
             ls -la
             exit 1
           fi
+          WECHAT_LIB_DIR="$PWD/Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/WeChatSDKFull"
+          WEIBO_LIB_DIR="$PWD/Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/SinaWeiboSDK"
           xcodebuild test \
             -workspace "$XCODE_WORKSPACE" \
             -scheme "$XCODE_SCHEME" \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath build/DerivedData
+            -derivedDataPath build/DerivedData \
+            LIBRARY_SEARCH_PATHS="$(inherited) $WEIBO_LIB_DIR $WECHAT_LIB_DIR"
     artifacts:
       - LiveDemo/build/DerivedData/Logs/Test/*.xcresult/**
