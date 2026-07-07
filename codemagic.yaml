@@ -71,7 +71,7 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 120
     environment:
-      xcode: latest
+      xcode: 16.3
       cocoapods: default
       ios_signing:
         distribution_type: ad_hoc
@@ -122,7 +122,7 @@ workflows:
     instance_type: mac_mini_m1
     max_build_duration: 120
     environment:
-      xcode: latest
+      xcode: 16.3
       cocoapods: default
       ios_signing:
         distribution_type: app_store
