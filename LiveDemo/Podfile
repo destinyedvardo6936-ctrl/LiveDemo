@@ -16,6 +16,8 @@ post_install do |installer|
                   if target.name == 'ZFPlayer'
                       config.build_settings['OTHER_CFLAGS'] = '$(inherited) -Wno-error=non-modular-include-in-framework-module -Wno-non-modular-include-in-framework-module'
                   end
+                  # Speed up Swift pod compilation by disabling whole-module-optimization
+                  config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Onone'
                end
           end
    end
