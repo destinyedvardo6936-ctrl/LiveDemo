@@ -5,7 +5,7 @@ definitions:
       XCODE_PROJECT: "LiveDemo.xcodeproj"
       XCODE_WORKSPACE: "LiveDemo.xcworkspace"
       XCODE_SCHEME: "LiveDemo"
-      BUNDLE_ID: "com.fd.kuailiao"
+      APP_BUNDLE_ID: "com.fd.kuailiao"
       IPHONEOS_DEPLOYMENT_TARGET: "13.0"
   caches:
     cocoapods_cache:
@@ -58,12 +58,18 @@ definitions:
           echo "Podfile not found, cannot configure signing"
           exit 1
         fi
-        EFFECTIVE_BUNDLE_ID="${BUNDLE_ID:-${CM_BUNDLE_ID:-}}"
+        EFFECTIVE_BUNDLE_ID="${APP_BUNDLE_ID:-${CM_APP_BUNDLE_ID:-}}"
         XCODE_WORKSPACE="${XCODE_WORKSPACE:-LiveDemo.xcworkspace}"
         XCODE_SCHEME="${XCODE_SCHEME:-LiveDemo}"
         if [ -z "$EFFECTIVE_BUNDLE_ID" ]; then
-          EFFECTIVE_BUNDLE_ID=$(cd "$APP_DIR" && xcodebuild -showBuildSettings -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -configuration Release 2>/dev/null | awk -F ' = ' '/PRODUCT_BUNDLE_IDENTIFIER/ {print $2; exit}')
+          EFFECTIVE_BUNDLE_ID=$(cd "$APP_DIR" && xcodebuild -showBuildSettings -workspace "$XCODE_WORKSPACE" -scheme "$XCODE_SCHEME" -configuration Release 2>/dev/null | awk -F ' = ' '/^[[:space:]]*PRODUCT_BUNDLE_IDENTIFIER = / {print $2}' | grep '^com\.' | head -n1)
         fi
+        case "$EFFECTIVE_BUNDLE_ID" in
+          ""|NO|YES|true|false)
+            echo "Unable to resolve a valid bundle id from environment or Xcode build settings"
+            exit 1
+            ;;
+        esac
         if [ -z "$EFFECTIVE_BUNDLE_ID" ]; then
           echo "Unable to resolve bundle id from environment or Xcode build settings"
           exit 1
@@ -178,7 +184,7 @@ definitions:
         export CM_PROFILE_NAME="$PROFILE_NAME"
         export CM_PROFILE_UUID="$PROFILE_UUID"
         export CM_TEAM_ID="$TEAM_ID"
-        export CM_BUNDLE_ID="$EFFECTIVE_BUNDLE_ID"
+        export CM_APP_BUNDLE_ID="$EFFECTIVE_BUNDLE_ID"
         export CM_EXPORT_OPTIONS_PATH="$EXPORT_OPTIONS_PATH"
         EOF
         rm -f "$PROFILE_PLIST"
