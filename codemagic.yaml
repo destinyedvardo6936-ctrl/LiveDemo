@@ -26,10 +26,11 @@ definitions:
         fi
         echo "Using APP_DIR=$APP_DIR"
         cd "$APP_DIR"
-        if [ -f "Pods/Manifest.lock" ] && cmp -s "Podfile.lock" "Pods/Manifest.lock"; then
+        if [ -d "Pods" ] && [ -f "Pods/Manifest.lock" ] && cmp -s "Podfile.lock" "Pods/Manifest.lock"; then
           echo "Pods are already in sync, skipping pod install"
         else
-          pod install --deployment
+          echo "Pods are missing or out of sync, running pod install"
+          pod install
         fi
 
         WECHAT_LIB="Pods/mob_sharesdk/ShareSDK/Support/PlatformSDK/WeChatSDKFull/libWeChatSDK.a"
