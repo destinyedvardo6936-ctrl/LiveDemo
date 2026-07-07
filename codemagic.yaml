@@ -2,6 +2,7 @@ definitions:
   environment:
     vars:
       WORK_DIR: "LiveDemo"
+      XCODE_PROJECT: "LiveDemo.xcodeproj"
       XCODE_WORKSPACE: "LiveDemo.xcworkspace"
       XCODE_SCHEME: "LiveDemo"
       BUNDLE_ID: "com.fd.kuailiao"
@@ -66,8 +67,15 @@ definitions:
           echo "Using local provisioning profile: $LOCAL_PROFILE"
         fi
         cd "$APP_DIR"
+        XCODE_PROJECT_PATH="${XCODE_PROJECT:-LiveDemo.xcodeproj}"
+        if [ ! -d "$XCODE_PROJECT_PATH" ]; then
+          echo "Xcode project not found: $XCODE_PROJECT_PATH"
+          ls -la
+          exit 1
+        fi
         EXPORT_OPTIONS_PATH="$HOME/export_options.plist"
         xcode-project use-profiles \
+          --project "$XCODE_PROJECT_PATH" \
           "${PROFILE_ARGS[@]}" \
           --archive-method="$XCODE_ARCHIVE_METHOD" \
           --custom-export-options="$XCODE_CUSTOM_EXPORT_OPTIONS" \
