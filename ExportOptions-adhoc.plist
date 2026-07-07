@@ -5,12 +5,7 @@
 	<key>method</key>
 	<string>ad-hoc</string>
 	<key>signingStyle</key>
-	<string>manual</string>
-	<key>provisioningProfiles</key>
-	<dict>
-		<key>com.fd.kuailiao</key>
-		<string>com.fd.kuailiao</string>
-	</dict>
+	<string>automatic</string>
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
