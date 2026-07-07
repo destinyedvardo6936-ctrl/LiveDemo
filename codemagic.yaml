@@ -58,38 +58,68 @@ definitions:
           echo "Podfile not found, cannot configure signing"
           exit 1
         fi
-        PROFILE_ARGS=()
         LOCAL_PROFILE=$(find "$REPO_ROOT" -maxdepth 2 -type f -name '*.mobileprovision' | head -n1)
-        if [ -n "$LOCAL_PROFILE" ]; then
-          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-          cp "$LOCAL_PROFILE" "$HOME/Library/MobileDevice/Provisioning Profiles/"
-          PROFILE_ARGS+=(--profile "$LOCAL_PROFILE")
-          echo "Using local provisioning profile: $LOCAL_PROFILE"
+        if [ -z "$LOCAL_PROFILE" ]; then
+          echo "No local provisioning profile found in repository root"
+          exit 1
         fi
+        mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+        PROFILE_PLIST="$HOME/profile.plist"
+        security cms -D -i "$LOCAL_PROFILE" > "$PROFILE_PLIST"
+        PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" "$PROFILE_PLIST")
+        PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" "$PROFILE_PLIST")
+        TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" "$PROFILE_PLIST")
+        cp "$LOCAL_PROFILE" "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
+        echo "Using local provisioning profile: $LOCAL_PROFILE"
+        echo "Resolved profile name: $PROFILE_NAME"
+        echo "Resolved profile UUID: $PROFILE_UUID"
+        echo "Resolved team id: $TEAM_ID"
         cd "$APP_DIR"
-        XCODE_PROJECT_PATH="${XCODE_PROJECT:-LiveDemo.xcodeproj}"
-        if [ ! -d "$XCODE_PROJECT_PATH" ]; then
-          echo "Xcode project not found: $XCODE_PROJECT_PATH"
-          ls -la
-          exit 1
-        fi
         EXPORT_OPTIONS_PATH="$HOME/export_options.plist"
-        xcode-project use-profiles \
-          --project "$XCODE_PROJECT_PATH" \
-          "${PROFILE_ARGS[@]}" \
-          --archive-method="$XCODE_ARCHIVE_METHOD" \
-          --custom-export-options="$XCODE_CUSTOM_EXPORT_OPTIONS" \
-          --export-options-plist "$EXPORT_OPTIONS_PATH" \
-          --warn-only \
-          --code-signing-setup-verbose-logging
-        if [ ! -f "$EXPORT_OPTIONS_PATH" ]; then
-          echo "Generated export options plist not found: $EXPORT_OPTIONS_PATH"
-          exit 1
-        fi
+        cat > "$EXPORT_OPTIONS_PATH" <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>method</key>
+          <string>${XCODE_EXPORT_METHOD}</string>
+          <key>signingStyle</key>
+          <string>manual</string>
+          <key>stripSwiftSymbols</key>
+          <true/>
+          <key>teamID</key>
+          <string>${TEAM_ID}</string>
+          <key>provisioningProfiles</key>
+          <dict>
+            <key>${BUNDLE_ID}</key>
+            <string>${PROFILE_NAME}</string>
+          </dict>
+          <key>uploadBitcode</key>
+          <false/>
+          <key>uploadSymbols</key>
+          <true/>
+        </dict>
+        </plist>
+        EOF
+        SIGNING_ENV_PATH="$REPO_ROOT/.codemagic-signing.env"
+        cat > "$SIGNING_ENV_PATH" <<EOF
+        export CM_APP_DIR="$APP_DIR"
+        export CM_PROFILE_NAME="$PROFILE_NAME"
+        export CM_PROFILE_UUID="$PROFILE_UUID"
+        export CM_TEAM_ID="$TEAM_ID"
+        export CM_EXPORT_OPTIONS_PATH="$EXPORT_OPTIONS_PATH"
+        EOF
     build_archive: &build_archive
       name: Build and Archive
       script: |
         set -e
+        REPO_ROOT=$(pwd)
+        SIGNING_ENV_PATH="$REPO_ROOT/.codemagic-signing.env"
+        if [ ! -f "$SIGNING_ENV_PATH" ]; then
+          echo "Signing environment file not found: $SIGNING_ENV_PATH"
+          exit 1
+        fi
+        . "$SIGNING_ENV_PATH"
         APP_DIR=$(find . -maxdepth 7 -type f -name Podfile | head -n1 | xargs dirname)
         if [ -z "$APP_DIR" ]; then
           echo "Podfile not found, cannot build"
@@ -111,7 +141,11 @@ definitions:
           -configuration Release \
           -archivePath build/LiveDemo.xcarchive \
           -destination 'generic/platform=iOS' \
-          -allowProvisioningUpdates
+          -allowProvisioningUpdates \
+          CODE_SIGN_STYLE=Manual \
+          DEVELOPMENT_TEAM="$CM_TEAM_ID" \
+          PROVISIONING_PROFILE_SPECIFIER="$CM_PROFILE_NAME" \
+          PROVISIONING_PROFILE="$CM_PROFILE_UUID"
 
 workflows:
   ios-build-ad-hoc:
@@ -128,8 +162,7 @@ workflows:
         XCODE_WORKSPACE: "LiveDemo.xcworkspace"
         XCODE_SCHEME: "LiveDemo"
         CERTIFICATE_PASSWORD: "123"
-        XCODE_ARCHIVE_METHOD: "ad-hoc"
-        XCODE_CUSTOM_EXPORT_OPTIONS: '{"method":"release-testing","signingStyle":"automatic","stripSwiftSymbols":true,"uploadBitcode":false,"uploadSymbols":true}'
+        XCODE_EXPORT_METHOD: "release-testing"
     scripts:
       - *install_pods
       - *setup_signing
@@ -137,12 +170,19 @@ workflows:
       - name: Export Ad Hoc IPA
         script: |
           set -e
+          REPO_ROOT=$(pwd)
+          SIGNING_ENV_PATH="$REPO_ROOT/.codemagic-signing.env"
+          if [ ! -f "$SIGNING_ENV_PATH" ]; then
+            echo "Signing environment file not found: $SIGNING_ENV_PATH"
+            exit 1
+          fi
+          . "$SIGNING_ENV_PATH"
           APP_DIR=$(find . -maxdepth 7 -type f -name Podfile | head -n1 | xargs dirname)
           if [ -z "$APP_DIR" ]; then
             echo "Podfile not found, cannot export"
             exit 1
           fi
-          EXPORT_OPTIONS="$HOME/export_options.plist"
+          EXPORT_OPTIONS="$CM_EXPORT_OPTIONS_PATH"
           if [ ! -f "$EXPORT_OPTIONS" ]; then
             echo "Generated export options plist not found: $EXPORT_OPTIONS"
             exit 1
@@ -181,8 +221,7 @@ workflows:
         XCODE_WORKSPACE: "LiveDemo.xcworkspace"
         XCODE_SCHEME: "LiveDemo"
         CERTIFICATE_PASSWORD: "123"
-        XCODE_ARCHIVE_METHOD: "app-store"
-        XCODE_CUSTOM_EXPORT_OPTIONS: '{"method":"app-store","signingStyle":"automatic","stripSwiftSymbols":true,"uploadBitcode":false,"uploadSymbols":true}'
+        XCODE_EXPORT_METHOD: "app-store"
     scripts:
       - *install_pods
       - *setup_signing
@@ -190,12 +229,19 @@ workflows:
       - name: Export App Store IPA
         script: |
           set -e
+          REPO_ROOT=$(pwd)
+          SIGNING_ENV_PATH="$REPO_ROOT/.codemagic-signing.env"
+          if [ ! -f "$SIGNING_ENV_PATH" ]; then
+            echo "Signing environment file not found: $SIGNING_ENV_PATH"
+            exit 1
+          fi
+          . "$SIGNING_ENV_PATH"
           APP_DIR=$(find . -maxdepth 7 -type f -name Podfile | head -n1 | xargs dirname)
           if [ -z "$APP_DIR" ]; then
             echo "Podfile not found, cannot export"
             exit 1
           fi
-          EXPORT_OPTIONS="$HOME/export_options.plist"
+          EXPORT_OPTIONS="$CM_EXPORT_OPTIONS_PATH"
           if [ ! -f "$EXPORT_OPTIONS" ]; then
             echo "Generated export options plist not found: $EXPORT_OPTIONS"
             exit 1
