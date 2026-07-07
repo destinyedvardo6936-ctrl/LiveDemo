@@ -6,11 +6,6 @@ definitions:
       XCODE_SCHEME: "LiveDemo"
       BUNDLE_ID: "com.fd.kuailiao"
       IPHONEOS_DEPLOYMENT_TARGET: "13.0"
-      PROVISIONING_PROFILE_PATH: "com.fd.kuailiao.mobileprovision"
-      PROVISIONING_PROFILE_SELECTOR: "com.fd.kuailiao"
-      PROVISIONING_PROFILE_SPECIFIER: "com.fd.kuailiao"
-      DEVELOPMENT_TEAM: "XTGL9G753G"
-      CERTIFICATE_PASSWORD: "123"
   caches:
     cocoapods_cache:
       - ~/.cocoapods
@@ -31,7 +26,7 @@ definitions:
         fi
         echo "Using APP_DIR=$APP_DIR"
         cd "$APP_DIR"
-        pod install --repo-update
+        pod install
     setup_signing: &setup_signing
       name: Set up code signing settings on Xcode project
       script: |
@@ -42,24 +37,6 @@ definitions:
           exit 1
         fi
         cd "$APP_DIR"
-        PROFILE_PATH="${PROVISIONING_PROFILE_PATH:-}"
-        if [ -z "$PROFILE_PATH" ]; then
-          PROFILE_PATH=$(find "$PWD" "$PWD/.." "$PWD/../.." -maxdepth 4 -type f -name '*.mobileprovision' 2>/dev/null | head -n1)
-        fi
-        if [ -n "$PROFILE_PATH" ]; then
-          if [ ! -f "$PROFILE_PATH" ]; then
-            PROFILE_PATH=$(find "$PWD" "$PWD/.." "$PWD/../.." -maxdepth 4 -type f -name "$(basename "$PROFILE_PATH")" 2>/dev/null | head -n1)
-          fi
-          if [ -f "$PROFILE_PATH" ]; then
-            mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
-            cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/"
-            echo "Imported provisioning profile: $PROFILE_PATH"
-          else
-            echo "Provisioning profile was not found at: $PROFILE_PATH"
-          fi
-        else
-          echo "No provisioning profile found"
-        fi
         xcode-project use-profiles
     build_archive: &build_archive
       name: Build and Archive
@@ -86,11 +63,7 @@ definitions:
           -configuration Release \
           -archivePath build/LiveDemo.xcarchive \
           -destination 'generic/platform=iOS' \
-          -allowProvisioningUpdates \
-          CODE_SIGN_STYLE=Manual \
-          CODE_SIGN_IDENTITY='Apple Distribution' \
-          PROVISIONING_PROFILE_SPECIFIER='${PROVISIONING_PROFILE_SPECIFIER:-com.fd.kuailiao}' \
-          DEVELOPMENT_TEAM='${DEVELOPMENT_TEAM:-XTGL9G753G}'
+          -allowProvisioningUpdates
 
 workflows:
   ios-build-ad-hoc:
