@@ -6,11 +6,6 @@
 	<string>app-store</string>
 	<key>signingStyle</key>
 	<string>manual</string>
-	<key>provisioningProfiles</key>
-	<dict>
-		<key>com.fd.kuailiao</key>
-		<string>com.fd.kuailiao</string>
-	</dict>
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
@@ -19,5 +14,10 @@
 	<false/>
 	<key>uploadSymbols</key>
 	<true/>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.fd.kuailiao</key>
+		<string>com.fd.kuailiao</string>
+	</dict>
 </dict>
 </plist>
