@@ -26,6 +26,8 @@ definitions:
         fi
         echo "Using APP_DIR=$APP_DIR"
         cd "$APP_DIR"
+        find . -name '.DS_Store' -delete || true
+        find . -name '._*' -delete || true
         if [ -d "Pods" ] && [ -f "Pods/Manifest.lock" ] && cmp -s "Podfile.lock" "Pods/Manifest.lock"; then
           echo "Pods are already in sync, skipping pod install"
         else
