@@ -117,6 +117,7 @@ workflows:
             echo "ExportOptions-adhoc.plist not found"
             exit 1
           fi
+          EXPORT_OPTIONS=$(cd "$(dirname "$EXPORT_OPTIONS")" && pwd)/$(basename "$EXPORT_OPTIONS")
           echo "Exporting from APP_DIR=$APP_DIR using $EXPORT_OPTIONS"
           cd "$APP_DIR"
           xcodebuild -exportArchive \
@@ -168,6 +169,7 @@ workflows:
             echo "ExportOptions.plist not found"
             exit 1
           fi
+          EXPORT_OPTIONS=$(cd "$(dirname "$EXPORT_OPTIONS")" && pwd)/$(basename "$EXPORT_OPTIONS")
           echo "Exporting from APP_DIR=$APP_DIR using $EXPORT_OPTIONS"
           cd "$APP_DIR"
           xcodebuild -exportArchive \
