@@ -761,9 +761,7 @@
                 self.playHolderImgView.hidden = YES;
             } else {
                 //播放失败
-                [self.loadingView stopAnimating];
-                [SVProgressHUD showNoMaskViewWithInfo:KLanguage(@"播放失败")];
-                self.playHolderImgView.hidden = NO;
+                [self handlePlayerStartFailureWithCode:code message:nil url:self.detailViewModel.dataModel.pull];
             }
         } else {
             V2TXLiveCode code = [self.livePlayer startLivePlay:self.detailViewModel.dataModel.pull];
@@ -775,9 +773,7 @@
                 self.playHolderImgView.hidden = YES;
             } else {
                 //播放失败
-                [self.loadingView stopAnimating];
-                [SVProgressHUD showNoMaskViewWithInfo:KLanguage(@"播放失败")];
-                self.playHolderImgView.hidden = NO;
+                [self handlePlayerStartFailureWithCode:code message:nil url:self.detailViewModel.dataModel.pull];
             }
         }
 
@@ -795,6 +791,13 @@
 - (void)startRequest {
     [self.detailViewModel.checkTypeCommand execute:@(YES)];
     [self.detailViewModel.recommendLiveCommand execute:@(YES)];
+}
+
+- (void)handlePlayerStartFailureWithCode:(NSInteger)code message:(NSString *)message url:(NSString *)url {
+    LCLog(@"live play failed, code: %ld, message: %@, url: %@", (long)code, message ?: @"", url ?: @"");
+    [self.loadingView stopAnimating];
+    [SVProgressHUD showNoMaskViewWithInfo:KLanguage(@"播放失败")];
+    self.playHolderImgView.hidden = NO;
 }
 
 - (void)pausePlayAndSocket {
@@ -1225,6 +1228,9 @@
  * 点播事件通知
  */
 - (void)onPlayEvent:(TXVodPlayer *)player event:(int)EvtID withParam:(NSDictionary *)param {
+    if (EvtID < 0) {
+        [self handlePlayerStartFailureWithCode:EvtID message:param.description url:self.detailViewModel.dataModel.pull];
+    }
 }
 
 /**
@@ -1251,6 +1257,7 @@
  * @param extraInfo 扩展信息
  */
 - (void)onError:(id<V2TXLivePlayer>)player code:(V2TXLiveCode)code message:(NSString *)msg extraInfo:(NSDictionary *)extraInfo {
+    [self handlePlayerStartFailureWithCode:code message:msg.length ? msg : extraInfo.description url:self.detailViewModel.dataModel.pull];
 }
 
 /**

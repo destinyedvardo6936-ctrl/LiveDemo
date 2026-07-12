@@ -13,8 +13,12 @@
 #define DATAVERSION    @"1.0.0"
 #define RequestTimeOut 10.0f
 
-#pragma mark 域名地址 数值会影响推送
-#define  kOpenLocalServers 1  //2，生产环境  1，测试环境
+#pragma mark 域名地址
+#if DEBUG
+#define  kOpenLocalServers 1  // Debug 使用测试环境
+#else
+#define  kOpenLocalServers 2  // Release 使用生产环境，避免线上直播 licence 与拉流环境错配
+#endif
 
 #if kOpenLocalServers == 1
 
