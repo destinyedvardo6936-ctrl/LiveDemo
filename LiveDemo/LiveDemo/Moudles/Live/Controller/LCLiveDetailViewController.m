@@ -43,12 +43,14 @@
 #import "ChessCardWebVC.h"
 #import "LCBindPhoneViewController.h"
 
-@interface LCLiveDetailViewController ()<V2TXLivePlayerObserver, TXVodPlayListener, UITableViewDelegate, UITableViewDataSource, TXVodPlayListener, UITextFieldDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate, haohuadelegate, guardShowDelegate, shouhuViewDelegate, platDelgate> {
+@interface LCLiveDetailViewController ()<V2TXLivePlayerObserver, TXVodPlayListener, TXLivePlayListener, UITableViewDelegate, UITableViewDataSource, TXVodPlayListener, UITextFieldDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate, haohuadelegate, guardShowDelegate, shouhuViewDelegate, platDelgate> {
     dispatch_source_t _timer;
     dispatch_source_t _previewTimer;
 }
 @property (nonatomic, strong) TXVodPlayer *videoPlayer;
+@property (nonatomic, strong) TXLivePlayer *flvPlayer;
 @property (nonatomic, strong) V2TXLivePlayer *livePlayer;
+@property (nonatomic, assign) BOOL hasHandledPlayerFailure;
 @property (nonatomic, weak) UIView *playerView;
 @property (nonatomic, weak) UIImageView *playHolderImgView;
 @property (nonatomic, weak) UIActivityIndicatorView *loadingView;
@@ -751,6 +753,7 @@
             return;
         }
         self.playControlView.hidden = NO;
+        self.hasHandledPlayerFailure = NO;
         if ([self.detailViewModel.dataModel.pull rangeOfString:@".mp4"].length > 0) {
             int code = [self.videoPlayer startVodPlay:self.detailViewModel.dataModel.pull];
            
@@ -761,6 +764,15 @@
                 self.playHolderImgView.hidden = YES;
             } else {
                 //播放失败
+                [self handlePlayerStartFailureWithCode:code message:nil url:self.detailViewModel.dataModel.pull];
+            }
+        } else if ([self.detailViewModel.dataModel.pull.lowercaseString containsString:@".flv"]) {
+            int code = [self.flvPlayer startLivePlay:self.detailViewModel.dataModel.pull type:PLAY_TYPE_LIVE_FLV];
+
+            if (code == 0) {
+                [self.loadingView stopAnimating];
+                self.playHolderImgView.hidden = YES;
+            } else {
                 [self handlePlayerStartFailureWithCode:code message:nil url:self.detailViewModel.dataModel.pull];
             }
         } else {
@@ -794,10 +806,17 @@
 }
 
 - (void)handlePlayerStartFailureWithCode:(NSInteger)code message:(NSString *)message url:(NSString *)url {
+    if (self.hasHandledPlayerFailure) {
+        return;
+    }
+
+    self.hasHandledPlayerFailure = YES;
     LCLog(@"live play failed, code: %ld, message: %@, url: %@", (long)code, message ?: @"", url ?: @"");
-    [self.loadingView stopAnimating];
-    [SVProgressHUD showNoMaskViewWithInfo:KLanguage(@"播放失败")];
-    self.playHolderImgView.hidden = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.loadingView stopAnimating];
+        [SVProgressHUD showNoMaskViewWithInfo:KLanguage(@"播放失败")];
+        self.playHolderImgView.hidden = NO;
+    });
 }
 
 - (void)pausePlayAndSocket {
@@ -813,6 +832,13 @@
         [_livePlayer setObserver:nil];
         [_livePlayer stopPlay];
         _livePlayer = nil;
+    }
+
+    if (_flvPlayer) {
+        _flvPlayer.delegate = nil;
+        [_flvPlayer stopPlay];
+        [_flvPlayer removeVideoWidget];
+        _flvPlayer = nil;
     }
 
     if (_videoPlayer) {
@@ -841,6 +867,10 @@
         [_livePlayer pauseAudio];
     }
 
+    if (_flvPlayer) {
+        [_flvPlayer pause];
+    }
+
     if (_videoPlayer) {
         [_videoPlayer pause];
 //        [_videoPlayer pauseAudio];
@@ -851,6 +881,10 @@
     if (_livePlayer) {
         [_livePlayer resumeAudio];
         [_livePlayer resumeVideo];
+    }
+
+    if (_flvPlayer) {
+        [_flvPlayer resume];
     }
 
     if (_videoPlayer) {
@@ -1241,6 +1275,16 @@
 - (void)onNetStatus:(TXVodPlayer *)player withParam:(NSDictionary *)param {
 }
 
+#pragma mark----TXLivePlayListener----
+- (void)onPlayEvent:(int)evtID withParam:(NSDictionary *)param {
+    if (evtID < 0) {
+        [self handlePlayerStartFailureWithCode:evtID message:param.description url:self.detailViewModel.dataModel.pull];
+    }
+}
+
+- (void)onNetStatus:(NSDictionary *)param {
+}
+
 #pragma mark---- V2TXLivePlayerObserver ----
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -1379,6 +1423,23 @@
     }
 
     return _livePlayer;
+}
+
+- (TXLivePlayer *)flvPlayer {
+    if (!_flvPlayer) {
+        TXLivePlayer *player = [[TXLivePlayer alloc] init];
+        _flvPlayer = player;
+        _flvPlayer.delegate = self;
+        _flvPlayer.config = [[TXLivePlayConfig alloc] init];
+        _flvPlayer.enableHWAcceleration = YES;
+        [TXLivePlayer setAudioRoute:TXAudioRouteSpeakerphone];
+        [_flvPlayer setRenderRotation:HOME_ORIENTATION_DOWN];
+        [_flvPlayer setRenderMode:RENDER_MODE_FILL_SCREEN];
+        [_flvPlayer setupVideoWidget:CGRectZero containView:self.playerView insertIndex:0];
+        [_flvPlayer setVolume:100];
+    }
+
+    return _flvPlayer;
 }
 
 - (UIView *)playerView {
